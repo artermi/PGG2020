@@ -175,7 +175,7 @@ long int steps;
   FILE *fout;
   char outname[25];
   
-//  sprintf(outname,"%s.dat",NAMEOUT);
+  sprintf(outname,"%s.dat",NAMEOUT);
   sgenrand(RANDOMIZE); // initialize RNG 
 
   prodgraph();  // creates connectivity graph 
@@ -246,12 +246,14 @@ long int steps;
     if ((steps%500) == 0)
     {
       fout = fopen(outname,"a+");
+      /*
       int theNumb = 0;
       for(i = 0; i < SIZE; i ++){
       	theNumb += player_s[i];
       }
-//      fprintf(fout,"%d%6.3f\n",steps,(float)Spop[1]/SIZE);
-      printf("%d%6.3f\n",steps,(float)theNumb/SIZE);
+      */
+      fprintf(fout,"%d%6.3f\n",steps,(float)Spop[1]/SIZE);
+      printf("%d%6.3f\n",steps,(float)Spop[1]/SIZE);
       fclose(fout); 
     }
   } // MC step
