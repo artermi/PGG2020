@@ -100,6 +100,7 @@ if __name__ == '__main__':
         if i % 500 == 0:
             per_c = game.calculate_rate()
             print(i,per_c)
+
         for j in range(1600):
             modi = game.choose_players()
             if not modi:
@@ -108,12 +109,4 @@ if __name__ == '__main__':
             game.two_players_play()
 
     
-    """
-    for j in range(25):
-        game = PGG_5G(5*(0.7+0.02*j),0.5,40)
 
-        for i in range(100000):
-            game.invest_and_play()
-            game.modify_strategies()
-        print((0.8+0.02*j),game.calculate_c())
-    """
