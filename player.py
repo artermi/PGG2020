@@ -35,3 +35,21 @@ class Player:
             self.isCoop = neighbour.isCoop
             return True
         return False
+
+class APlayer(Player):
+    def __init__(self,strategy,alpha):
+        super().__init__(strategy)
+        self.alp = alpha
+        self.nei = 'o' #nei for the neighbour to give money. nei can be n,s,e,w
+    def allocate(self,nei):
+        if super().allocate() == 1.0:
+            return 1
+        if nei == self.nei and choices([True,False],[self.alp,1-self.alp])[0]:
+            return 4
+        return 0
+    def change_strategy(self,nei,K,sprof,nprof,mos):
+        chan = super().change_strategy(nei,K,prof,nprof)
+        if chan:
+            self.nei = mos
+        return chan
+
