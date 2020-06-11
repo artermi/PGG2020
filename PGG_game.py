@@ -93,11 +93,10 @@ class PGG_5G:
 
 
 if __name__ == '__main__':
-
-#    rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.82,3.84,3.86,3.88,3.90,
-#            3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
-#            4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    rlist = [3.80]
+    """
+    rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
+            3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
+            4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
     for r in rlist:
         filename = 'sim/sim_' +  str(int(r * 1000) ) + '.dat'
         f = open(filename,"a")
@@ -118,5 +117,17 @@ if __name__ == '__main__':
                 game.two_players_play()
         f.close()
 
-    
+   """ 
 
+    game = PGG_5G(5,0.5,40) #r,K,L
+    for i in range(10000):
+        if i % 500 == 0:
+            per_c = game.calculate_rate()
+            print(i,per_c)
+
+        for j in range(1600):
+            modi = game.choose_players()
+            if not modi:
+                continue
+            #If the strategy is not modified, no need to play the game
+            game.two_players_play()
