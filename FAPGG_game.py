@@ -1,6 +1,6 @@
 from PGG_game import PGG_5G
 from player import APlayer
-from random import choice, randint
+from random import choice, randint,choices
 from gen_image import FromArr
 
 class FAPGG_5G(PGG_5G):
@@ -10,7 +10,8 @@ class FAPGG_5G(PGG_5G):
         for i in range(L): 
             temp_matrix = []
             for j in range(L):
-                temp_matrix.append(APlayer(choice([True,False]),alp))
+#                temp_matrix.append(APlayer(choice([True,False]),alp))
+                temp_matrix.append(APlayer(choices([True,False],[0.1,0.9])[0],alp))
             self.player_matrix.append(temp_matrix)
 
     def one_play(self,i,j,rnd):
@@ -79,7 +80,7 @@ class FAPGG_5G(PGG_5G):
             return False
         
 if __name__ == '__main__':
-    r = 3
+    r = 1.5
     alp = 1
     game = FAPGG_5G(r,0.5,40,alp)
     for i in range(10001):
