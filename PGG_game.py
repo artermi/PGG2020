@@ -72,14 +72,13 @@ class PGG_5G:
             self.yi = i
             self.yj = (j-1)%self.L
 
-        #I use self.xi to see if the x,y use the same strategies
+        self.xi = i
+        self.xj = j
+        
         if self.player_matrix[self.yi][self.yj].isCoop != self.player_matrix[i][j].isCoop:
-            self.xi = i
-            self.xj = j
-        else:
-            self.xi = -1
+            return True
 
-        return self.xi > -1 #means two players do not use the same strategy
+        return False #means two players use the same strategy, so no necessary to do the next run
 
 
     def calculate_rate(self):
