@@ -19,8 +19,11 @@ class Player:
     def change_strategy(self, neighbour,K, self_prof,neigh_prof): #K is uncertainty
         prob = 0.0
         if self.isCoop == neighbour.isCoop:
+            return False
+            """
             print("WRONG!! they shouldn't be the same!!")
             exit()
+            """
 
         if (self_prof - neigh_prof)/K > 10:
             return False
@@ -45,8 +48,9 @@ class APlayer(Player):
         self.strD = False
 
     def allocate(self,nei,rnd):
-        if super().allocate() == 1.0:
+        if super().allocate() == 1.0 or self.nei == 'o':
             return 1.0
+
         if self.rnd != rnd:
             self.strD = choices([True,False],[self.alp,1-self.alp])[0]
             self.rnd = rnd
@@ -55,8 +59,7 @@ class APlayer(Player):
         return 1.0
 
     def change_strategy(self,nei,K,sprof,nprof,mos):
-        chan = super().change_strategy(nei,K,sprof,nprof)
-        if chan and not self.isCoop:
-            self.nei = mos
+        chan = super().change_strategy(nei,K,sprof,nprof) 
+        self.nei = mos
         return chan
 
