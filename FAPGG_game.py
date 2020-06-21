@@ -1,12 +1,13 @@
 from PGG_game import PGG_5G
 from player import APlayer
 from random import choice, randint
+from gen_image import FromArr
 
 class FAPGG_5G(PGG_5G):
     def __init__(self,r,K,L,alp):
         super().__init__(r,K,L)
         self.player_matrix.clear()
-        for i in range(L):
+        for i in range(L): 
             temp_matrix = []
             for j in range(L):
                 temp_matrix.append(APlayer(choice([True,False]),alp))
@@ -35,9 +36,14 @@ class FAPGG_5G(PGG_5G):
         lst = [a,b,c,d]
         mst = max(lst)
         dire = ['n','s','e','w']
+        mst_list = []
         for i in range(4):
             if lst[i] == mst:
-                return dire[i]
+                mst_list.append(dire[i])
+
+        if len(mst_list) > 0:
+            return choice(mst_list)
+
         return '0'
 
     def two_players_play(self,rnd):
@@ -61,15 +67,30 @@ class FAPGG_5G(PGG_5G):
             mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
 
         self.xi = -1
+    def print_pic(self,fname):
+        FromArr(self.player_matrix,fname)
+
+    def choose_players(self):
+        if super().choose_players():
+            return True
+        elif self.player_matrix[self.xi][self.xj].isCoop == False:
+            return True
+        else:
+            return False
         
 if __name__ == '__main__':
-    game = FAPGG_5G(1.5,0.5,40,0.5)
+    r = 3
+    alp = 1
+    game = FAPGG_5G(r,0.5,40,alp)
     for i in range(10001):
-        if i % 2 == 0:
+        if i % 10 == 0:
             print(i,game.calculate_rate())
-#        for i in range(1600):
-        if True:
+        for j in range(1600):
+#        if True:
             modi = game.choose_players()
             if not modi:
                 continue
-            game.two_players_play(i)
+            game.two_players_play(j + i*1600)
+
+        if i % 20 == 0:
+            game.print_pic('pic/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6) + '.png')
