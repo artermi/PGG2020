@@ -9,17 +9,21 @@ def FromArr(arr,name):
             if arr[i][j].isCoop:
                 data[i,j] = [255,255,255] #white
             else:
-                nei = arr[i][j].nei
-                if nei == 'n':
-                    data[i,j] = [255,153,204] #pink
-                elif nei == 'e':
-                    data[i,j] = [102,102,255] #blue
-                elif nei == 's':
-                    data[i,j] = [153,255,153] #green
-                elif nei == 'w':
-                    data[i,j] = [255,204,153] #orange
-                else:
-                    data[i,j] = [0,0,0]
+                try:
+                    nei = arr[i][j].nei
+                    if nei == 'n':
+                        data[i,j] = [255,153,204] #pink
+                    elif nei == 'e':
+                        data[i,j] = [102,102,255] #blue
+                    elif nei == 's':
+                        data[i,j] = [153,255,153] #green
+                    elif nei == 'w':
+                        data[i,j] = [255,204,153] #orange
+                    else:
+                        data[i,j] = [0,0,0]
+                except:
+                    data[i,j] = [100,100,100] #grey
+
     data = numpy.repeat(numpy.repeat(data,20,axis = 0),20,axis=1)
     image = Image.fromarray(data)
     image.save(name)
