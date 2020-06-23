@@ -1,7 +1,7 @@
 from PGG_game import PGG_5G
 from player import APlayer
 from random import choice, randint,choices
-from gen_image import FromArr
+
 
 class FAPGG_5G(PGG_5G):
     def __init__(self,r,K,L,alp):
@@ -10,8 +10,8 @@ class FAPGG_5G(PGG_5G):
         for i in range(L): 
             temp_matrix = []
             for j in range(L):
-#                temp_matrix.append(APlayer(choice([True,False]),alp))
-                temp_matrix.append(APlayer(choices([True,False],[0.1,0.9])[0],alp))
+                temp_matrix.append(APlayer(choice([True,False]),alp))
+#                temp_matrix.append(APlayer(choices([True,False],[0.1,0.9])[0],alp))
             self.player_matrix.append(temp_matrix)
 
     def one_play(self,i,j,rnd):
@@ -68,8 +68,6 @@ class FAPGG_5G(PGG_5G):
             mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
 
         self.xi = -1
-    def print_pic(self,fname):
-        FromArr(self.player_matrix,fname)
 
     def choose_players(self):
         if super().choose_players():
@@ -80,7 +78,7 @@ class FAPGG_5G(PGG_5G):
             return False
         
 if __name__ == '__main__':
-    r = 1.5
+    r = 4
     alp = 1
     game = FAPGG_5G(r,0.5,40,alp)
     for i in range(10001):

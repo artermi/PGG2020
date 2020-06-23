@@ -1,5 +1,6 @@
 from player import Player
 from random import choice, randint
+from gen_image import FromArr
 
 class PGG_5G:
     def __init__(self,r,K,L):
@@ -89,6 +90,8 @@ class PGG_5G:
                 if self.player_matrix[i][j].isCoop:
                     coor = coor + 1
         return coor/ttl
+    def print_pic(self,fname):
+        FromArr(self.player_matrix,fname)
 
 
 if __name__ == '__main__':
