@@ -117,6 +117,43 @@ def do_all_mode():
                 #If the strategy is not modified, no need to play the game
                     game.two_players_play(j + i * 1600)
             f.close()
+
+def do_alpha_mode():
+    rs = [4,4.5,5]
+    alps = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+    paths = []
+
+    for r in rs:
+        path = 'r_' + str(int( * 1000))
+        #path = 'r_040'
+        Path(path).mkdir(parents=True, exist_ok=True)
+        paths.append((path,alp))
+
+    for path in paths:
+        p, r = path
+
+        for a in alps:
+            filename = p + '/' + 'alp_' + str(int(alp * 10)).zfill(3) +  p + '.dat'
+            f = open(filename,"a")
+            print('Now doing:' + filename)
+
+            game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            for i in range(10001):
+                if i % 500 == 0:
+                    per_c = game.calculate_rate()
+                    f.write(str(i).zfill(6) + ' ' + '%.3f'%(per_c) + '\n')
+                    print(i,per_c)
+
+                for j in range(1600):
+                    modi = game.choose_players()
+                    if not modi:
+                        continue
+                #If the strategy is not modified, no need to play the game
+                    game.two_players_play(j + i * 1600)
+            f.close()
+
+
+
         
 if __name__ == '__main__':
     msg0 = 'type "python FAPGG_game.py" if you want to run the big simulation'
@@ -128,6 +165,9 @@ if __name__ == '__main__':
 
     if len(sys.argv) < 2:
         do_all_mode()
+        sys.exit()
+    if len(sys.argv) == 2:
+        do_alpha_mode()
         sys.exit()
 
     #read from argv
