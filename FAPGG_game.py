@@ -24,7 +24,7 @@ class FAPGG_5G(PGG_5G):
         goods = goods + mat[i][(j-1) % L].allocate('s',rnd)
         #Tell you I'm your north or south
         #+-----------> i+        +------------> i+
-        #|    n                  |    s
+        #|   s  n                  |    s
         #| e  0   w              | w  t  e
         #|    s                  |    n
         #˅                       ˅
@@ -53,17 +53,21 @@ class FAPGG_5G(PGG_5G):
         mat = self.player_matrix
         L = self.L
         if self.xi > -1:
-            profit_x = 1
+            profit_x = self.one_play(xi,xj,rnd)
             profit_x = profit_x + self.one_play((xi+1) % L,xj,rnd)
             profit_x = profit_x + self.one_play((xi-1) % L,xj,rnd)
             profit_x = profit_x + self.one_play(xi,(xj+1) % L,rnd)
             profit_x = profit_x + self.one_play(xi,(xj-1) % L,rnd)
 
+            profit_x = profit_x - 5 if mat[xi][xj].isCoop else profit_x
+
             pye = self.one_play((yi+1) % L,yj,rnd) #east
             pyw = self.one_play((yi-1) % L,yj,rnd) #west
             pyn = self.one_play(yi,(yj-1) % L,rnd) #north
             pys = self.one_play(yi,(yj+1) % L,rnd) #south
-            profit_y = 1 + pye + pyw + pyn + pys
+            profit_y = self.one_play(yi,yj,rnd) + pye + pyw + pyn + pys
+
+            profit_y = profit_y - 5 if mat[yi][yj].isCoop else profit_y
 
             mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
 
@@ -78,8 +82,8 @@ class FAPGG_5G(PGG_5G):
             return False
         
 if __name__ == '__main__':
-    r = 4
-    alp = 1
+    r = 5
+    alp = 0.5
     game = FAPGG_5G(r,0.5,40,alp)
     for i in range(10001):
         if i % 10 == 0:

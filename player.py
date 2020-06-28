@@ -48,14 +48,15 @@ class APlayer(Player):
         self.strD = False
 
     def allocate(self,nei,rnd):
-        if super().allocate() == 1.0 or self.nei == 'o':
-            return 1.0
-
+        if super().allocate() == 0:
+            return 0            
         if self.rnd != rnd:
             self.strD = choices([True,False],[self.alp,1-self.alp])[0]
             self.rnd = rnd
-        if self.strD:
+
+        if self.strD and self.nei != 'o':
             return 4.0 if nei == self.nei else 0.0
+
         return 1.0
 
     def change_strategy(self,nei,K,sprof,nprof,mos):

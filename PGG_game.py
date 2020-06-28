@@ -121,11 +121,15 @@ if __name__ == '__main__':
 
    """ 
 
-    game = PGG_5G(5,0.5,40) #r,K,L
+    game = PGG_5G(4,0.5,40) #r,K,L
     for i in range(10000):
+        
         if i % 500 == 0:
             per_c = game.calculate_rate()
             print(i,per_c)
+
+        if i % 20 == 0:
+            game.print_pic('pic0/' + 'r_'+ '4' + '_' + str(i).zfill(6))
 
         for j in range(1600):
             modi = game.choose_players()
