@@ -124,16 +124,16 @@ def do_alpha_mode():
     paths = []
 
     for r in rs:
-        path = 'r_' + str(int( * 1000))
+        path = 'r_' + str(int( r * 1000))
         #path = 'r_040'
         Path(path).mkdir(parents=True, exist_ok=True)
-        paths.append((path,alp))
+        paths.append((path,r))
 
     for path in paths:
         p, r = path
 
-        for a in alps:
-            filename = p + '/' + 'alp_' + str(int(alp * 10)).zfill(3) +  p + '.dat'
+        for alp in alps:
+            filename = p + '/' + 'alp_' + str(int(alp * 10)).zfill(3) + '_' +  p + '.dat'
             f = open(filename,"a")
             print('Now doing:' + filename)
 
