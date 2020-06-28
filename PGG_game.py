@@ -1,6 +1,7 @@
 from player import Player
 from random import choice, randint
 from gen_image import FromArr_png
+import sys
 
 class PGG_5G:
     def __init__(self,r,K,L):
@@ -90,13 +91,12 @@ class PGG_5G:
                 if self.player_matrix[i][j].isCoop:
                     coor = coor + 1
         return coor/ttl
+        
     def print_pic(self,fname):
         FromArr_png(self.player_matrix,fname)
 
-
-if __name__ == '__main__':
-    """
-    rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
+def do_all_mode():
+        rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
     for r in rlist:
@@ -117,11 +117,18 @@ if __name__ == '__main__':
                     continue
             #If the strategy is not modified, no need to play the game
                 game.two_players_play()
-        f.close()
+        f.close() 
+      
 
-   """ 
 
-    game = PGG_5G(4,0.5,40) #r,K,L
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        do_all_mode()
+        return
+
+    r = float(sys.argv[1])
+    path = sys.argv[2]
+    game = PGG_5G(r,0.5,40) #r,K,L
     for i in range(10000):
         
         if i % 500 == 0:
@@ -129,7 +136,7 @@ if __name__ == '__main__':
             print(i,per_c)
 
         if i % 20 == 0:
-            game.print_pic('pic0/' + 'r_'+ '4' + '_' + str(i).zfill(6))
+            game.print_pic( path + 'r_'+ '4' + '_' + str(i).zfill(6))
 
         for j in range(1600):
             modi = game.choose_players()

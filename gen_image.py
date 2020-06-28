@@ -1,6 +1,9 @@
 from PIL import Image, ImageDraw, ImageFont
 from player import APlayer,Player
-import numpy 
+import numpy
+import sys, os
+from pathlib import Path
+
 
 def FromArr_png(arr,name):
     data = numpy.zeros((len(arr),len(arr[0]),3), dtype=numpy.uint8)
@@ -36,6 +39,9 @@ def FromArr_png(arr,name):
     wholeimg = Image.new('RGB',(image.width,image.height + textimg.height))
     wholeimg.paste(image,(0,0))
     wholeimg.paste(textimg,(0,image.height))
+
+    if name.find('/') > -1:
+        Path(name.split('/')[0]).mkdir(parents=True, exist_ok=True)
     
     wholeimg.save(name + '.png')
 
