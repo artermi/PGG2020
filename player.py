@@ -7,7 +7,6 @@ class Player:
         # isCoop is initial strategy. True if it's a cooperator.
         # prof is the initial profit
         self.isCoop = strategy #Should be true or false
-        self.newCoop = self.isCoop
 
     def allocate(self):
         #allocate its resource
@@ -20,10 +19,6 @@ class Player:
         prob = 0.0
         if self.isCoop == neighbour.isCoop:
             return False
-            """
-            print("WRONG!! they shouldn't be the same!!")
-            exit()
-            """
 
         if (self_prof - neigh_prof)/K > 10:
             return False
@@ -49,10 +44,13 @@ class APlayer(Player):
 
     def allocate(self,nei,rnd):
         if super().allocate() == 0:
-            return 0            
+            return 0
+                        
         if self.rnd != rnd:
             self.strD = choices([True,False],[self.alp,1-self.alp])[0]
             self.rnd = rnd
+        if self.alp == 0 and self.strD:
+            print('error')
 
         if self.strD and self.nei != 'o':
             return 4.0 if nei == self.nei else 0.0
