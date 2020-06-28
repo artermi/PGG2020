@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from player import APlayer,Player
 import numpy 
 
@@ -26,8 +26,18 @@ def FromArr(arr,name):
 
     data = numpy.repeat(numpy.repeat(data,20,axis = 0),20,axis=1)
     image = Image.fromarray(data)
-    image.save(name)
 
+    textimg = Image.new('RGB',(image.width,50),color = 'white')
+    d = ImageDraw.Draw(textimg)
+    fnt = ImageFont.truetype('arial.ttf', size = 35)
+
+    towrite = name.split('/')[-1][:-4]
+    d.text((100,10),towrite,font = fnt, fill = (0,0,0))
+    wholeimg = Image.new('RGB',(image.width,image.height + textimg.height))
+    wholeimg.paste(image,(0,0))
+    wholeimg.paste(textimg,(0,image.height))
+    
+    wholeimg.save(name)
 
 if __name__ == '__main__':
     arr = []
