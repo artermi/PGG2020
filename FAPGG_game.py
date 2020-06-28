@@ -16,16 +16,17 @@ class FAPGG_5G(PGG_5G):
             self.player_matrix.append(temp_matrix)
 
     def one_play(self,i,j,rnd):
-        goods = 1
         mat = self.player_matrix
         L = self.L
+        goods = mat[i][j].allocate('o',rnd)
         goods = goods + mat[(i+1) % L][j].allocate('e',rnd)
         goods = goods + mat[(i-1) % L][j].allocate('w',rnd)
         goods = goods + mat[i][(j+1) % L].allocate('n',rnd)
         goods = goods + mat[i][(j-1) % L].allocate('s',rnd)
+
         #Tell you I'm your north or south
         #+-----------> i+        +------------> i+
-        #|   s  n                  |    s
+        #|    n                  |    s
         #| e  0   w              | w  t  e
         #|    s                  |    n
         #˅                       ˅
@@ -53,26 +54,26 @@ class FAPGG_5G(PGG_5G):
         yi,yj = self.yi,self.yj
         mat = self.player_matrix
         L = self.L
-        if self.xi > -1:
-            profit_x = self.one_play(xi,xj,rnd)
-            profit_x = profit_x + self.one_play((xi+1) % L,xj,rnd)
-            profit_x = profit_x + self.one_play((xi-1) % L,xj,rnd)
-            profit_x = profit_x + self.one_play(xi,(xj+1) % L,rnd)
-            profit_x = profit_x + self.one_play(xi,(xj-1) % L,rnd)
 
-            profit_x = profit_x - 5 if mat[xi][xj].isCoop else profit_x
+        profit_x = self.one_play(xi,xj,rnd)
+        profit_x = profit_x + self.one_play((xi+1) % L,xj,rnd)
+        profit_x = profit_x + self.one_play((xi-1) % L,xj,rnd)
+        profit_x = profit_x + self.one_play(xi,(xj+1) % L,rnd)
+        profit_x = profit_x + self.one_play(xi,(xj-1) % L,rnd)
 
-            pye = self.one_play((yi+1) % L,yj,rnd) #east
-            pyw = self.one_play((yi-1) % L,yj,rnd) #west
-            pyn = self.one_play(yi,(yj-1) % L,rnd) #north
-            pys = self.one_play(yi,(yj+1) % L,rnd) #south
-            profit_y = self.one_play(yi,yj,rnd) + pye + pyw + pyn + pys
+        profit_x = profit_x - 5 if mat[xi][xj].isCoop else profit_x
 
-            profit_y = profit_y - 5 if mat[yi][yj].isCoop else profit_y
+        profit_y = self.one_play(yi,yj,rnd)
+        pye = self.one_play((yi+1) % L,yj,rnd) #east
+        pyw = self.one_play((yi-1) % L,yj,rnd) #west
+        pyn = self.one_play(yi,(yj-1) % L,rnd) #north
+        pys = self.one_play(yi,(yj+1) % L,rnd) #south
+        profit_y = profit_y + pye + pyw + pyn + pys
 
-            mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
+        profit_y = profit_y - 5 if mat[yi][yj].isCoop else profit_y
 
-        self.xi = -1
+        mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
+
 
     def choose_players(self):
         if super().choose_players():
@@ -118,8 +119,16 @@ def do_all_mode():
             f.close()
         
 if __name__ == '__main__':
+    msg0 = 'type "python FAPGG_game.py" if you want to run the big simulation'
+    msg1 = 'type "python FAPGG_game.py rate alpha path" if just want to try'
+    msg2 = 'for example "python FAPGG_game.py 4 0.5 r4a5"'
+    print(msg0)
+    print(msg1)
+    print(msg2)
+
     if len(sys.argv) < 2:
         do_all_mode()
+        sys.exit()
 
     #read from argv
     r = float(sys.argv[1])
@@ -128,7 +137,7 @@ if __name__ == '__main__':
 
     game = FAPGG_5G(r,0.5,40,alp)
     for i in range(10001):
-        if i % 10 == 0:
+        if i % 100 == 0:
             print(i,game.calculate_rate())
         for j in range(1600):
 #        if True:
@@ -138,5 +147,5 @@ if __name__ == '__main__':
             game.two_players_play(j + i*1600)
 
         if i % 20 == 0:
-            game.print_pic(path + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))
+            game.print_pic(path + '/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))
     

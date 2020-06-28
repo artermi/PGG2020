@@ -34,39 +34,40 @@ class PGG_5G:
 
 
     def two_players_play(self):
-        if self.xi > -1: #Means x and y have different strateies
-            L = self.L
-            profit_x = self.one_play(self.xi,self.xj)
-            profit_x = profit_x + self.one_play((self.xi+1)%L,self.xj) + self.one_play((self.xi-1)%L,self.xj)
-            profit_x = profit_x + self.one_play(self.xi,(self.xj+1)%L) + self.one_play(self.xi,(self.xj-1)%L)
-            if self.player_matrix[self.xi][self.xj].isCoop:
-                profit_x = profit_x - 5
+         #Means x and y have different strateies
+        L = self.L
+        profit_x = self.one_play(self.xi,self.xj)
+        profit_x = profit_x + self.one_play((self.xi+1)%L,self.xj) 
+        profit_x = profit_x + self.one_play((self.xi-1)%L,self.xj)
+        profit_x = profit_x + self.one_play(self.xi,(self.xj+1)%L) 
+        profit_x = profit_x + self.one_play(self.xi,(self.xj-1)%L)
+        if self.player_matrix[self.xi][self.xj].isCoop:
+            profit_x = profit_x - 5
 
-            profit_y = self.one_play(self.yi,self.yj)
-            profit_y = profit_y + self.one_play((self.yi+1)%L,self.yj) + self.one_play((self.yi-1)%L,self.yj)
-            profit_y = profit_y + self.one_play(self.yi,(self.yj+1)%L) + self.one_play(self.yi,(self.yj-1)%L)
-            if self.player_matrix[self.yi][self.yj].isCoop:
-                profit_y = profit_y - 5
+        profit_y = self.one_play(self.yi,self.yj)
+        profit_y = profit_y + self.one_play((self.yi+1)%L,self.yj) + self.one_play((self.yi-1)%L,self.yj)
+        profit_y = profit_y + self.one_play(self.yi,(self.yj+1)%L) + self.one_play(self.yi,(self.yj-1)%L)
+        if self.player_matrix[self.yi][self.yj].isCoop:
+            profit_y = profit_y - 5
             
-            self.player_matrix[self.yi][self.yj].change_strategy(self.player_matrix[self.xi][self.xj],self.K,profit_y,profit_x)
+        self.player_matrix[self.yi][self.yj].change_strategy(self.player_matrix[self.xi][self.xj],self.K,profit_y,profit_x)
 
-        self.xi = -1
 
 
     def choose_players(self):
         i = randint(0,self.L-1)
         j = randint(0,self.L-1)
 
-        rand_neigh = choice(['u','d','l','r'])
-        if rand_neigh == 'l':
+        rand_neigh = choice(['n','s','e','w'])
+        if rand_neigh == 'w':
             self.yi = (i-1)%self.L
             self.yj = j
 
-        elif rand_neigh == 'r':
+        elif rand_neigh == 'e':
             self.yi = (i+1)%self.L
             self.yj = j
         
-        elif rand_neigh == 'u':
+        elif rand_neigh == 'n':
             self.yi = i
             self.yj = (j+1)%self.L
 
@@ -95,8 +96,9 @@ class PGG_5G:
     def print_pic(self,fname):
         FromArr_png(self.player_matrix,fname)
 
+
 def do_all_mode():
-        rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
+    rlist = [3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
     for r in rlist:
@@ -105,7 +107,7 @@ def do_all_mode():
         print('Now doing:' + filename)
 
         game = PGG_5G(r,0.5,40) #r,K,L
-        for i in range(10000):
+        for i in range(10001):
             if i % 500 == 0:
                 per_c = game.calculate_rate()
                 f.write(str(i).zfill(6) + ' ' + '%.3f'%(per_c) + '\n')
@@ -122,21 +124,27 @@ def do_all_mode():
 
 
 if __name__ == '__main__':
+    msg0 = 'type "python PGG_game.py" if you want to run the big simulation'
+    msg1 = 'type "python PGG_game.py rate path" if just want to try'
+    msg2 = 'for example "python PGG_game.py 4 r4"'
+    print(msg0)
+    print(msg1)
+    print(msg2)
+
     if len(sys.argv) < 2:
         do_all_mode()
-        return
+        sys.exit()
 
     r = float(sys.argv[1])
     path = sys.argv[2]
     game = PGG_5G(r,0.5,40) #r,K,L
-    for i in range(10000):
-        
+    for i in range(10001):
         if i % 500 == 0:
             per_c = game.calculate_rate()
             print(i,per_c)
 
         if i % 20 == 0:
-            game.print_pic( path + 'r_'+ '4' + '_' + str(i).zfill(6))
+            game.print_pic( path + '/' + 'r_'+ '4' + '_' + str(i).zfill(6))
 
         for j in range(1600):
             modi = game.choose_players()
