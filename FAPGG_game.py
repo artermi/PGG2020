@@ -96,4 +96,4 @@ if __name__ == '__main__':
             game.two_players_play(j + i*1600)
 
         if i % 20 == 0:
-            game.print_pic('pic/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6) + '.png')
+            game.print_pic('pic/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))

@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 from player import APlayer,Player
 import numpy 
 
-def FromArr(arr,name):
+def FromArr_png(arr,name):
     data = numpy.zeros((len(arr),len(arr[0]),3), dtype=numpy.uint8)
     for i in range(len(arr)):
         for j in range(len(arr[i])):
@@ -31,13 +31,13 @@ def FromArr(arr,name):
     d = ImageDraw.Draw(textimg)
     fnt = ImageFont.truetype('arial.ttf', size = 35)
 
-    towrite = name.split('/')[-1][:-4]
+    towrite = name.split('/')[-1]
     d.text((100,10),towrite,font = fnt, fill = (0,0,0))
     wholeimg = Image.new('RGB',(image.width,image.height + textimg.height))
     wholeimg.paste(image,(0,0))
     wholeimg.paste(textimg,(0,image.height))
     
-    wholeimg.save(name)
+    wholeimg.save(name + '.png')
 
 if __name__ == '__main__':
     arr = []
@@ -64,4 +64,4 @@ if __name__ == '__main__':
                 tmp.append(ap)
 
         arr.append(tmp)
-    FromArr(arr,'000.png')
+    FromArr_png(arr,'000')
