@@ -6,10 +6,12 @@ import statistics
 rG = []
 lo = []
 
-for fi in os.listdir("sim"):
+path = argv[1]
+
+for fi in os.listdir(path):
     num = float(fi[4:8])/5000
     rG.append(num)
-    with open('sim/' + fi,'r') as f:
+    with open(path + fi,'r') as f:
         all_num = []
         for line in f:
             rnd, per = int(line.split()[0]), float(line.split()[1])
