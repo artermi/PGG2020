@@ -139,42 +139,42 @@ void prodgraph(void)
   long int rewire, first, player1,player2,player3,MCe;
   double x;
   int i,j;
- 
+
   // set an initial square lattice-like neighborhood
   for(i=0; i<L; i++)                     
   {
    for(j=0; j<L; j++)
-    { 
+   { 
       player1 = L * j + i;              /* consider a site >> a player */
 
-      iu = i + 1;         ju = j;     if (iu==L) iu = 0;
-      player2 = L * ju + iu;  player_n[player1][0] = player2;
+    iu = i + 1;         ju = j;     if (iu==L) iu = 0;
+    player2 = L * ju + iu;  player_n[player1][0] = player2;
 
-      iu = i;             ju = j + 1; if (ju==L) ju = 0;
-      player2 = L * ju + iu;  player_n[player1][1] = player2;
+    iu = i;             ju = j + 1; if (ju==L) ju = 0;
+    player2 = L * ju + iu;  player_n[player1][1] = player2;
 
-      iu = i - 1;         ju = j;     if (i==0) iu = L - 1;
-      player2 = L * ju + iu;  player_n[player1][2] = player2;
+    iu = i - 1;         ju = j;     if (i==0) iu = L - 1;
+    player2 = L * ju + iu;  player_n[player1][2] = player2;
 
-      iu = i;             ju = j - 1; if (j==0) ju = L - 1;
-      player2 = L * ju + iu;  player_n[player1][3] = player2;
-    }
+    iu = i;             ju = j - 1; if (j==0) ju = L - 1;
+    player2 = L * ju + iu;  player_n[player1][3] = player2;
   }
+}
 
 } /* prodgraph */
 
 int main()
 {
-int ri,source,target,nbh,nbs,n_nbs,n_nbh,contrib0,contrib;
-float P_source,P_target,adaptation_rate,dP;
-long int i;
-int strat1, strat2,sn,snn;
-long int player1,player2;
-long int steps;
+  int ri,source,target,nbh,nbs,n_nbs,n_nbh,contrib0,contrib;
+  float P_source,P_target,adaptation_rate,dP;
+  long int i;
+  int strat1, strat2,sn,snn;
+  long int player1,player2;
+  long int steps;
 
   FILE *fout;
   char outname[25];
-  
+
   sprintf(outname,"%s.dat",NAMEOUT);
   sgenrand(RANDOMIZE); // initialize RNG 
 
@@ -183,10 +183,10 @@ long int steps;
   for (i=0; i<2; i++) { Spop[i] = 0; }  // portion of strategies 
   initial();    // strategy distribution
 
-  for (steps=0; steps<MC_STEPS; steps++)
+for (steps=0; steps<MC_STEPS; steps++)
+{
+  for (i=0; i<SIZE; i++)
   {
-    for (i=0; i<SIZE; i++)
-    {
       player1 = (int) randi(SIZE);      // choose a source 
       strat1 = player_s[player1];       // strategy of source 
       ri = (int) randi(4);
@@ -195,23 +195,23 @@ long int steps;
 
       if (strat1!=strat2)            // different strategies 
       {
-       P_source = 0; P_target = 0;
-       
+        P_source = 0; P_target = 0;
+
        contrib0 = strat1;           // source contribution to 0th game
        for (nbh=0; nbh<4; nbh++)
        {
          nbs = player_n[player1][nbh];   // neighbor of source 
-	 sn = player_s[nbs];            // strategy of neighbor 
+	       sn = player_s[nbs];            // strategy of neighbor 
 
          contrib0 += sn; // neighbor's contribution to 0th game
          contrib = sn;   // neighbor's contribution to his/her own game
          for (n_nbh=0; n_nbh<4; n_nbh++)
          {
            n_nbs = player_n[nbs][n_nbh];   // neighbor of nbs 
-	   snn = player_s[n_nbs];          // strategy of neighbor of nbs
-	   contrib += snn;                 
-	 }
-	 P_source += (r*contrib)/5-strat1;
+	         snn = player_s[n_nbs];          // strategy of neighbor of nbs
+	         contrib += snn;                 
+	       }
+        P_source += (r*contrib)/5-strat1;
        } // nbh	 	 
        P_source += (r*contrib0)/5-strat1; 
 
@@ -219,28 +219,28 @@ long int steps;
        for (nbh=0; nbh<4; nbh++)
        {
          nbs = player_n[player2][nbh];   // neighbor of source 
-	 sn = player_s[nbs];            // strategy of neighbor 
+	       sn = player_s[nbs];            // strategy of neighbor 
 
          contrib0 += sn; // neighbor's contribution to 0th game
          contrib = sn;   // neighbor's contribution to his/her own game
          for (n_nbh=0; n_nbh<4; n_nbh++)
          {
            n_nbs = player_n[nbs][n_nbh];   // neighbor of nbs 
-	   snn = player_s[n_nbs];          // strategy of neighbor of nbs
-	   contrib += snn;                 
-	 }
-	 P_target += (r*contrib)/5-strat2;
+	         snn = player_s[n_nbs];          // strategy of neighbor of nbs
+	         contrib += snn;                 
+	       }
+        P_target += (r*contrib)/5-strat2;
        } // nbh	 	 
        P_target += (r*contrib0)/5-strat2; 
        
        adaptation_rate = 1.0 / (1.0 + exp((P_target-P_source)/K));
        
        if (randf() < adaptation_rate)
-        {
-	 player_s[player2] = player_s[player1];
-	 Spop[strat1]++;
-	 Spop[strat2]--;
-        }
+       {
+        player_s[player2] = player_s[player1];
+        Spop[strat1]++;
+        Spop[strat2]--;
+      }
       } // different players       
     } // i: elementary MC step
     if ((steps%500) == 0)
