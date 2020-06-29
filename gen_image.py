@@ -9,23 +9,27 @@ def FromArr_png(arr,name):
     data = numpy.zeros((len(arr),len(arr[0]),3), dtype=numpy.uint8)
     for i in range(len(arr)):
         for j in range(len(arr[i])):
-            if arr[i][j].isCoop:
-                data[i,j] = [255,255,255] #white
+            if not arr[i][j].isCoop:
+                data[i,j] = [100,100,100] #grey
             else:
                 try:
                     nei = arr[i][j].nei
                     if nei == 'n':
-                        data[i,j] = [255,153,204] #pink
+                        data[i,j] = [255,221,238] #pink
                     elif nei == 'e':
-                        data[i,j] = [102,102,255] #blue
+                        data[i,j] = [188,188,255] #blue
                     elif nei == 's':
-                        data[i,j] = [153,255,153] #green
+                        data[i,j] = [210,255,210] #green
                     elif nei == 'w':
-                        data[i,j] = [255,204,153] #orange
+                        data[i,j] = [255,233,210] #orange
                     else:
                         data[i,j] = [0,0,0]
+
+                    if not arr[i][j].strD:
+                        data[i,j] = [255,255,255] #white
+
                 except:
-                    data[i,j] = [100,100,100] #grey
+                    data[i,j] = [255,255,255] #white 
 
     data = numpy.repeat(numpy.repeat(data,20,axis = 0),20,axis=1)
     image = Image.fromarray(data)

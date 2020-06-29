@@ -52,7 +52,7 @@ class APlayer(Player):
         if self.alp == 0 and self.strD:
             print('error')
 
-        if self.strD and self.nei != 'o':
+        if self.strD and self.nei != 'o' and self.nei != 'm':
             return 4.0 if nei == self.nei else 0.0
 
         return 1.0

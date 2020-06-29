@@ -19,15 +19,15 @@ class FAPGG_5G(PGG_5G):
         mat = self.player_matrix
         L = self.L
         goods = mat[i][j].allocate('o',rnd)
-        goods = goods + mat[(i+1) % L][j].allocate('e',rnd)
-        goods = goods + mat[(i-1) % L][j].allocate('w',rnd)
+        goods = goods + mat[(i+1) % L][j].allocate('w',rnd)
+        goods = goods + mat[(i-1) % L][j].allocate('e',rnd)
         goods = goods + mat[i][(j+1) % L].allocate('n',rnd)
         goods = goods + mat[i][(j-1) % L].allocate('s',rnd)
 
         #Tell you I'm your north or south
         #+-----------> i+        +------------> i+
         #|    n                  |    s
-        #| e  0   w              | w  t  e
+        #| w  0   e              | e  t  w
         #|    s                  |    n
         #˅                       ˅
         #j+                      j+ 
@@ -78,7 +78,7 @@ class FAPGG_5G(PGG_5G):
     def choose_players(self):
         if super().choose_players():
             return True
-        elif self.player_matrix[self.xi][self.xj].isCoop == False:
+        elif self.player_matrix[self.xi][self.xj].isCoop:
             return True
         else:
             return False
@@ -100,15 +100,19 @@ def do_all_mode():
 
         for r in rlist:
             filename = p + '/' + p + '_' + 'r_' +  str(int(r * 1000) ) + '.dat'
-            f = open(filename,"a")
+            f = open(filename,"w")
             print('Now doing:' + filename)
 
             game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            per_c = 0.5
             for i in range(10001):
                 if i % 500 == 0:
                     per_c = game.calculate_rate()
                     f.write(str(i).zfill(6) + ' ' + '%.3f'%(per_c) + '\n')
                     print(i,per_c)
+
+                if per_c == 1 or per_c == 0:
+                    continue
 
                 for j in range(1600):
                     modi = game.choose_players()
@@ -143,6 +147,8 @@ def do_alpha_mode():
                     per_c = game.calculate_rate()
                     f.write(str(i).zfill(6) + ' ' + '%.3f'%(per_c) + '\n')
                     print(i,per_c)
+                if per_c == 1 or per_c == 0:
+                    continue
 
                 for j in range(1600):
                     modi = game.choose_players()
