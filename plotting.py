@@ -38,6 +38,9 @@ if __name__ == '__main__':
     print('n = 1 if want to do classic, n = 2 if want to do classic in different alpha')
     print('n = 3 if want to plot co vs alpha.')
 
+    if len(sys.argv) < 2:
+        sys.exit()
+
     path = sys.argv[1]
     mode = int(sys.argv[2])
     main(path,mode)

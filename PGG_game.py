@@ -106,8 +106,8 @@ def do_all_mode():
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
     for r in rlist:
-        filename = 'sim/sim_' +  str(int(r * 1000) ) + '.dat'
-        f = open(filename,"a")
+        filename = 'sim2/sim_' +  str(int(r * 1000) ) + '.dat'
+        f = open(filename,'w')
         print('Now doing:' + filename)
 
         game = PGG_5G(r,0.5,40) #r,K,L
