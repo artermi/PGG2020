@@ -6,14 +6,14 @@ from pathlib import Path
 
 
 def FromArr_png(arr,name):
-    data = numpy.zeros((len(arr),len(arr[0]),3), dtype=numpy.uint8)
-    for i in range(len(arr)):
-        for j in range(len(arr[i])):
-            if not arr[i][j].isCoop:
+    data = numpy.zeros((arr.shape[0],arr.shape[1],3), dtype=numpy.uint8)
+    for i in range(arr.shape[0]):
+        for j in range(arr.shape[1]):
+            if not arr[i,j].isCoop:
                 data[i,j] = [100,100,100] #grey
             else:
                 try:
-                    nei = arr[i][j].nei
+                    nei = arr[i,j].nei
                     if nei == 'n':
                         data[i,j] = [255,221,238] #pink
                     elif nei == 'e':
@@ -25,7 +25,7 @@ def FromArr_png(arr,name):
                     else:
                         data[i,j] = [0,0,0]
 
-                    if not arr[i][j].strD:
+                    if not arr[i,j].strD:
                         data[i,j] = [255,255,255] #white
 
                 except:
@@ -74,4 +74,4 @@ if __name__ == '__main__':
                 tmp.append(ap)
 
         arr.append(tmp)
-    FromArr_png(arr,'000')
+    FromArr_png(numpy.array(arr),'000')

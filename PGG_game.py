@@ -1,6 +1,7 @@
 from player import Player
 from random import choice, randint
 from gen_image import FromArr_png
+import numpy as np
 import sys
 
 class PGG_5G:
@@ -17,18 +18,21 @@ class PGG_5G:
         self.yj = -1
 
         self.first = True
-        self.player_matrix = []
+        player_matrix = []
         for i in range(L):
             temp_matrix = []
             for j in range(L):
                 temp_matrix.append(Player(choice([True,False])))
-            self.player_matrix.append(temp_matrix)
+            player_matrix.append(temp_matrix)
+
+        self.player_matrix = np.array(player_matrix)
+
 
     def one_play(self,i,j):
         #each we asked the players of grid[i][j] to play
-        goods = self.player_matrix[i][j].allocate()
-        goods = goods + self.player_matrix[(i+1) % self.L][j].allocate() + self.player_matrix[(i-1) % self.L][j].allocate() 
-        goods = goods + self.player_matrix[i][(j+1) % self.L].allocate() + self.player_matrix[i][(j-1) % self.L].allocate()
+        goods = self.player_matrix[i,j].allocate()
+        goods = goods + self.player_matrix[(i+1) % self.L, j].allocate() + self.player_matrix[(i-1) % self.L , j].allocate() 
+        goods = goods + self.player_matrix[i, (j+1) % self.L].allocate() + self.player_matrix[i , (j-1) % self.L].allocate()
 
         return goods * self.r / 5.0 #just record the gain
 
@@ -41,13 +45,13 @@ class PGG_5G:
         profit_x = profit_x + self.one_play((self.xi-1)%L,self.xj)
         profit_x = profit_x + self.one_play(self.xi,(self.xj+1)%L) 
         profit_x = profit_x + self.one_play(self.xi,(self.xj-1)%L)
-        if self.player_matrix[self.xi][self.xj].isCoop:
+        if self.player_matrix[self.xi , self.xj].isCoop:
             profit_x = profit_x - 5
 
         profit_y = self.one_play(self.yi,self.yj)
         profit_y = profit_y + self.one_play((self.yi+1)%L,self.yj) + self.one_play((self.yi-1)%L,self.yj)
         profit_y = profit_y + self.one_play(self.yi,(self.yj+1)%L) + self.one_play(self.yi,(self.yj-1)%L)
-        if self.player_matrix[self.yi][self.yj].isCoop:
+        if self.player_matrix[self.yi, self.yj].isCoop:
             profit_y = profit_y - 5
             
         self.player_matrix[self.yi][self.yj].change_strategy(self.player_matrix[self.xi][self.xj],self.K,profit_y,profit_x)
@@ -78,7 +82,7 @@ class PGG_5G:
         self.xi = i
         self.xj = j
         
-        if self.player_matrix[self.yi][self.yj].isCoop != self.player_matrix[i][j].isCoop:
+        if self.player_matrix[self.yi,self.yj].isCoop != self.player_matrix[i,j].isCoop:
             return True
 
         return False #means two players use the same strategy, so no necessary to do the next run
@@ -89,7 +93,7 @@ class PGG_5G:
         ttl = self.L * self.L
         for i in range(self.L):
             for j in range(self.L):
-                if self.player_matrix[i][j].isCoop:
+                if self.player_matrix[i,j].isCoop:
                     coor = coor + 1
         return coor/ttl
         

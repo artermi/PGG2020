@@ -2,27 +2,30 @@ from PGG_game import PGG_5G
 from player import APlayer
 from random import choice, randint,choices
 from pathlib import Path
+import numpy as np 
 import sys
 
 class FAPGG_5G(PGG_5G):
     def __init__(self,r,K,L,alp):
         super().__init__(r,K,L)
-        self.player_matrix.clear()
+        player_matrix = []
         for i in range(L): 
             temp_matrix = []
             for j in range(L):
                 temp_matrix.append(APlayer(choice([True,False]),alp))
 #                temp_matrix.append(APlayer(choices([True,False],[0.1,0.9])[0],alp))
-            self.player_matrix.append(temp_matrix)
+            player_matrix.append(temp_matrix)
+
+        self.player_matrix = np.array(player_matrix)
 
     def one_play(self,i,j,rnd):
         mat = self.player_matrix
         L = self.L
-        goods = mat[i][j].allocate('o',rnd)
-        goods = goods + mat[(i+1) % L][j].allocate('w',rnd)
-        goods = goods + mat[(i-1) % L][j].allocate('e',rnd)
-        goods = goods + mat[i][(j+1) % L].allocate('n',rnd)
-        goods = goods + mat[i][(j-1) % L].allocate('s',rnd)
+        goods = mat[i,j].allocate('o',rnd)
+        goods = goods + mat[(i+1) % L,j].allocate('w',rnd)
+        goods = goods + mat[(i-1) % L,j].allocate('e',rnd)
+        goods = goods + mat[i,(j+1) % L].allocate('n',rnd)
+        goods = goods + mat[i,(j-1) % L].allocate('s',rnd)
 
         #Tell you I'm your north or south
         #+-----------> i+        +------------> i+
@@ -61,7 +64,7 @@ class FAPGG_5G(PGG_5G):
         profit_x = profit_x + self.one_play(xi,(xj+1) % L,rnd)
         profit_x = profit_x + self.one_play(xi,(xj-1) % L,rnd)
 
-        profit_x = profit_x - 5 if mat[xi][xj].isCoop else profit_x
+        profit_x = profit_x - 5 if mat[xi,xj].isCoop else profit_x
 
         profit_y = self.one_play(yi,yj,rnd)
         pye = self.one_play((yi+1) % L,yj,rnd) #east
@@ -70,15 +73,15 @@ class FAPGG_5G(PGG_5G):
         pys = self.one_play(yi,(yj+1) % L,rnd) #south
         profit_y = profit_y + pye + pyw + pyn + pys
 
-        profit_y = profit_y - 5 if mat[yi][yj].isCoop else profit_y
+        profit_y = profit_y - 5 if mat[yi,yj].isCoop else profit_y
 
-        mat[yi][yj].change_strategy(mat[xi][xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
+        mat[yi,yj].change_strategy(mat[xi,xj],self.K,profit_y,profit_x,self.the_most(pyn,pys,pye,pyw))
 
 
     def choose_players(self):
         if super().choose_players():
             return True
-        elif self.player_matrix[self.xi][self.xj].isCoop:
+        elif self.player_matrix[self.xi,self.xj].isCoop:
             return True
         else:
             return False
