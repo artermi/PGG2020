@@ -148,7 +148,7 @@ if __name__ == '__main__':
             print(i,per_c)
 
         if i % 20 == 0:
-            game.print_pic( path + '/' + 'r_'+ '4' + '_' + str(i).zfill(6))
+            game.print_pic( path + '/r_'+ sys.argv[1] + '_' + str(i).zfill(6))
 
         for j in range(1600):
             modi = game.choose_players()

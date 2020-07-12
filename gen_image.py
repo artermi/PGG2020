@@ -23,7 +23,7 @@ def FromArr_png(arr,name):
                     elif nei == 'w':
                         data[i,j] = [255,233,210] #orange
                     else:
-                        data[i,j] = [0,0,0]
+                        data[i,j] = [255,255,255]
 
                     if not arr[i,j].strD:
                         data[i,j] = [255,255,255] #white
@@ -38,15 +38,27 @@ def FromArr_png(arr,name):
     d = ImageDraw.Draw(textimg)
     fnt = ImageFont.truetype('arial.ttf', size = 35)
 
-    towrite = name.split('/')[-1]
-    d.text((100,10),towrite,font = fnt, fill = (0,0,0))
-    wholeimg = Image.new('RGB',(image.width,image.height + textimg.height))
+    fname = name.split('/')[-1]
+    if name.find('alp') > -1:
+        r,alp,itr = fname.split('_')[1],fname.split('_')[3],fname.split('_')[4]
+        towrite = 'r:{}, α:{}, itr:{}'.format(r,alp,itr)
+    else:
+        r,itr = fname.split('_')[1],fname.split('_')[2]
+        towrite = 'r:{}, itr:{}'.format(r,itr)
+    #print(towrite)
+
+    d.text((10,10),towrite,font = fnt, fill = (0,0,0))
+    note = Image.open('note.png')
+    note = note.resize((image.width, int(note.height * image.width / note.width)),resample=Image.BICUBIC)
+    wholeimg = Image.new('RGB',(image.width,image.height + textimg.height + note.height),'white')
     wholeimg.paste(image,(0,0))
     wholeimg.paste(textimg,(0,image.height))
+    wholeimg.paste(note,(0,image.height + textimg.height))
 
     if name.find('/') > -1:
         Path(name.split('/')[0]).mkdir(parents=True, exist_ok=True)
-    
+
+    #wholeimg.show()
     wholeimg.save(name + '.png')
 
 if __name__ == '__main__':
@@ -54,24 +66,31 @@ if __name__ == '__main__':
     for i in range(40):
         tmp = []
         for j in range(40):
-            if (i + j) % 5 == 0:
-                tmp.append(APlayer(True,0))
-            elif (i + j) % 5 == 1:
-                ap = APlayer(False,0)
+            if (i + j) % 6 == 0:
+                tmp.append(APlayer(False,0))
+            elif (i + j) % 6 == 1:
+                ap = APlayer(True,0)
                 ap.nei = 'n'
+                ap.strD = True
                 tmp.append(ap)
-            elif (i + j) % 5 == 2:
-                ap = APlayer(False,0)
+            elif (i + j) % 6 == 2:
+                ap = APlayer(True,0)
                 ap.nei = 'e'
+                ap.strD = True
                 tmp.append(ap)
-            elif (i + j) % 5 == 3:
-                ap = APlayer(False,0)
+            elif (i + j) % 6 == 3:
+                ap = APlayer(True,0)
                 ap.nei = 'w'
+                ap.strD = True
+                tmp.append(ap)
+            elif (i + j) % 6 == 4:
+                ap = APlayer(True,0)
+                ap.nei = 's'
+                ap.strD = True
                 tmp.append(ap)
             else:
-                ap = APlayer(False,0)
-                ap.nei = 's'
+                ap = APlayer(True,0)
                 tmp.append(ap)
 
         arr.append(tmp)
-    FromArr_png(numpy.array(arr),'000')
+    FromArr_png(numpy.array(arr),'r_5_alp_0.8_000')
