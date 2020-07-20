@@ -1,6 +1,7 @@
 import math
 import sys
 from random import choices
+import numpy as np
 
 class Player:
     def __init__(self,strategy):
@@ -38,13 +39,13 @@ class APlayer(Player):
     def __init__(self,strategy,alpha):
         super().__init__(strategy)
         self.alp = alpha
-        self.nei = 'o' #nei for the neighbour to give money. nei can be n,s,e,w
+        self.nei = 0 #nei for the neighbour to give money. nei can be n1,s2,e3,w4
         self.rnd = 0
         self.strD = False
 
     def allocate(self,nei,rnd):
-        if super().allocate() == 0:
-            return 0
+        if not self.isCoop:
+            return 0.0
                         
         if self.rnd != rnd:
             self.strD = choices([True,False],[self.alp,1-self.alp])[0]
@@ -52,7 +53,7 @@ class APlayer(Player):
         if self.alp == 0 and self.strD:
             print('error')
 
-        if self.strD and self.nei != 'o' and self.nei != 'm':
+        if self.strD and self.nei != 0 and nei != 0:
             return 4.0 if nei == self.nei else 0.0
 
         return 1.0

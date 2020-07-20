@@ -14,13 +14,13 @@ def FromArr_png(arr,name):
             else:
                 try:
                     nei = arr[i,j].nei
-                    if nei == 'n':
+                    if nei == 1:
                         data[i,j] = [255,221,238] #pink
-                    elif nei == 'e':
+                    elif nei == 3:
                         data[i,j] = [188,188,255] #blue
-                    elif nei == 's':
+                    elif nei == 2:
                         data[i,j] = [210,255,210] #green
-                    elif nei == 'w':
+                    elif nei == 4:
                         data[i,j] = [255,233,210] #orange
                     else:
                         data[i,j] = [255,255,255]
@@ -70,22 +70,22 @@ if __name__ == '__main__':
                 tmp.append(APlayer(False,0))
             elif (i + j) % 6 == 1:
                 ap = APlayer(True,0)
-                ap.nei = 'n'
+                ap.nei = 1
                 ap.strD = True
                 tmp.append(ap)
             elif (i + j) % 6 == 2:
                 ap = APlayer(True,0)
-                ap.nei = 'e'
+                ap.nei = 3
                 ap.strD = True
                 tmp.append(ap)
             elif (i + j) % 6 == 3:
                 ap = APlayer(True,0)
-                ap.nei = 'w'
+                ap.nei = 4
                 ap.strD = True
                 tmp.append(ap)
             elif (i + j) % 6 == 4:
                 ap = APlayer(True,0)
-                ap.nei = 's'
+                ap.nei = 2
                 ap.strD = True
                 tmp.append(ap)
             else:
