@@ -94,10 +94,10 @@ def do_all_mode():
             3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0,0.5,1]
+    alps = [0.4,0.45]
     paths = []
     for alp in alps:
-        path = 'alp_' + str(int(alp * 10)).zfill(3)
+        path = 'alp_' + str(int(alp * 100)).zfill(3)
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,alp))
 
@@ -186,18 +186,19 @@ if __name__ == '__main__':
     r = float(sys.argv[1])
     alp = float(sys.argv[2])
     path = sys.argv[3]
-
-    game = FAPGG_5G(r,0.5,40,alp)
+    L = 100
+    Size = L*L
+    game = FAPGG_5G(r,0.5,L,alp)
     start = time.time()
     for i in range(10001):
         if i % 500 == 0:
             print(i,game.calculate_rate())
-        for j in range(1600):
+        for j in range(Size):
 #        if True:
             modi = game.choose_players()
             if not modi:
                 continue
-            game.two_players_play(j + i*1600)
+            game.two_players_play(j + i*Size)
 
         if i % 20 == 0:
             game.print_pic(path + '/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))

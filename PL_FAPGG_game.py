@@ -1,21 +1,23 @@
 from PGG_game import PGG_5G
 from player import APlayer
+from power_test import power_prob_array
 from random import choice, randint,choices
 from pathlib import Path
 import numpy as np 
 import sys
 import time
 
-class FAPGG_5G(PGG_5G):
-    def __init__(self,r,K,L,alp):
+class PL_FAPGG_5G(PGG_5G):
+    def __init__(self,r,K,L,expe):
         super().__init__(r,K,L)
         player_matrix = []
+        zto1 = [(i+1) / 50 for i in range(50)]
+        dtion = power_prob_array(expe)
         for i in range(L): 
             temp_matrix = []
             for j in range(L):
-                isD = np.random.exponential(scale = alp)
-                isD = isD - int(isD)
-                temp_matrix.append(APlayer(choice([True,False]),isD))
+                alp = choices(zto1,dtion)[0]
+                temp_matrix.append(APlayer(choice([True,False]),alp))
 #                temp_matrix.append(APlayer(choices([True,False],[0.1,0.9])[0],alp))
             player_matrix.append(temp_matrix)
 
@@ -96,10 +98,10 @@ def do_all_mode():
             3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0.603,1.230,2.672] #0.45 0.4 0.3
+    alps = [0.45,0.4,0.3]
     paths = []
     for alp in alps:
-        path = 'exp_' + str(int(alp * 100)).zfill(3)
+        path = 'PL_' + str(int(alp * 100)).zfill(3)
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,alp))
 
@@ -110,10 +112,11 @@ def do_all_mode():
             filename = p + '/alp_' + str(int(alp * 100)).zfill(3) + '_'
             filename += 'r_' +  str(int(r * 1000) ) + '.dat'
             
+
             f = open(filename,"w")
             print('Now doing:' + filename)
 
-            game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            game = PL_FAPGG_5G(r,0.5,40,alp) #r,K,L alp
             per_c = 0.5
             for i in range(10001):
                 if i % 500 == 0:
@@ -138,7 +141,7 @@ def do_alpha_mode():
     paths = []
 
     for r in rs:
-        path = 'expr_' + str(int( r * 1000))
+        path = 'r_' + str(int( r * 1000))
         #path = 'r_040'
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,r))
@@ -147,12 +150,11 @@ def do_alpha_mode():
         p, r = path
 
         for alp in alps:
-            filename = p + '/' + 'alp_' + str(int(alp * 10)).zfill(3) + '_'
-            filename += 'r_' + str(int( r * 1000)) + '.dat'
+            filename = p + '/' + 'exp_' + str(int(alp * 10)).zfill(3) + '_' +  p + '.dat'
             f = open(filename,"w")
             print('Now doing:' + filename)
 
-            game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            game = PL_FAPGG_5G(r,0.5,40,alp) #r,K,L alp
             for i in range(10001):
                 if i % 500 == 0:
                     per_c = game.calculate_rate()
@@ -189,23 +191,24 @@ if __name__ == '__main__':
 
     #read from argv
     r = float(sys.argv[1])
-    alp = float(sys.argv[2])
+    exp = float(sys.argv[2])
     path = sys.argv[3]
-
-    game = FAPGG_5G(r,0.5,40,alp)
+    L = 100
+    Size = L*L
+    game = PL_FAPGG_5G(r,0.5,L,exp)
     start = time.time()
     for i in range(10001):
         if i % 500 == 0:
             print(i,game.calculate_rate())
-        for j in range(1600):
+        for j in range(Size):
 #        if True:
             modi = game.choose_players()
             if not modi:
                 continue
-            game.two_players_play(j + i*1600)
+            game.two_players_play(j + i*Size)
 
-        #if i % 20 == 0:
-        #    game.print_pic(path + '/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))
+        if i % 20 == 0:
+            game.print_pic(path + '/' + 'r_'+str(r) + '_exp_'+str(alp) + '_' + str(i).zfill(6))
     
     end = time.time()
     print('total_time: {}'.format(end - start))

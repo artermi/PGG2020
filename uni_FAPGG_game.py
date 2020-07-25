@@ -13,7 +13,11 @@ class FAPGG_5G(PGG_5G):
         for i in range(L): 
             temp_matrix = []
             for j in range(L):
-                pro = np.random.uniform()
+                if alp < 0.5:
+                    low, high = 0, alp * 2
+                else:
+                    low, high = 2 * alp -1, 1
+                pro = np.random.uniform(low,high)
                 temp_matrix.append(APlayer(choice([True,False]),pro))
             player_matrix.append(temp_matrix)
 
@@ -94,10 +98,10 @@ def do_all_mode():
             3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0]
+    alps = [0.3,0.4,0.45]
     paths = []
     for alp in alps:
-        path = 'uni_' + str(int(alp * 10)).zfill(3)
+        path = 'uni_' + str(int(alp * 100)).zfill(3)
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,alp))
 
