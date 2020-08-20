@@ -89,15 +89,17 @@ class FAPGG_5G(PGG_5G):
     """
 
 def do_all_mode():
-    rlist = [2.4,2.41,2.42,2.43,2.44,2.45,2.46,2.47,2.48,2.49,2.5,2.6,2.7,2.8,2.9,
-            3,3.1,3.15,3.17,3.2,3.25,3.3,3.35,3.4,3.5,3.6,
-            3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
+    rlist = [#2.4,2.41,2.42,2.43,2.44,2.45,2.46,2.47,2.48,2.49,2.5,2.6,2.7,2.8,2.9,
+            #3,3.1,3.15,3.17,3.2,3.25,3.3,3.35,3.4,3.5,3.6,
+            #3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,
+            3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
-            4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0.4,0.45]
+            4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5
+            ]
+    alps = [0]#,0.4,0.45,0.5,0.7,1]
     paths = []
     for alp in alps:
-        path = 'alp_' + str(int(alp * 100)).zfill(3)
+        path = 'det_' + str(int(alp * 100)).zfill(3)
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,alp))
 
@@ -105,13 +107,18 @@ def do_all_mode():
         p, alp = path
 
         for r in rlist:
-            filename = p + '/' + p + '_' + 'r_' +  str(int(r * 1000) ) + '.dat'
+            filename = p + '/alp_' + str(int(alp * 100)).zfill(3) + '_r_' +  str(int(r * 1000) ) + '.dat'
             f = open(filename,"w")
             print('Now doing:' + filename)
 
-            game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            L = 200
+            LL = L * L
+            game = FAPGG_5G(r,0.5,L,alp) #r,K,L alp
             per_c = 0.5
             for i in range(10001):
+                if i < 1000 and i % 30 == 0:
+                    per_c = game.calculate_rate()
+                    
                 if i % 500 == 0:
                     per_c = game.calculate_rate()
                     f.write(str(i).zfill(6) + ' ' + '%.3f'%(per_c) + '\n')
@@ -120,7 +127,7 @@ def do_all_mode():
                 if per_c == 1 or per_c == 0:
                     continue
 
-                for j in range(1600):
+                for j in range(LL):
                     modi = game.choose_players()
                     if not modi:
                         continue
@@ -186,7 +193,7 @@ if __name__ == '__main__':
     r = float(sys.argv[1])
     alp = float(sys.argv[2])
     path = sys.argv[3]
-    L = 100
+    L = 40
     Size = L*L
     game = FAPGG_5G(r,0.5,L,alp)
     start = time.time()
@@ -200,8 +207,8 @@ if __name__ == '__main__':
                 continue
             game.two_players_play(j + i*Size)
 
-        if i % 20 == 0:
-            game.print_pic(path + '/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))
+#        if i % 20 == 0:
+#            game.print_pic(path + '/' + 'r_'+str(r) + '_alp_'+str(alp) + '_' + str(i).zfill(6))
     
     end = time.time()
     print('total_time: {}'.format(end - start))

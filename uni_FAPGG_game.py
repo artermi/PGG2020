@@ -98,7 +98,7 @@ def do_all_mode():
             3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0.3,0.4,0.45]
+    alps = [0.7]
     paths = []
     for alp in alps:
         path = 'uni_' + str(int(alp * 100)).zfill(3)
@@ -114,7 +114,8 @@ def do_all_mode():
             f = open(filename,"w")
             print('Now doing:' + filename)
 
-            game = FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            L = 60
+            game = FAPGG_5G(r,0.5,L,alp) #r,K,L alp
             per_c = 0.5
             for i in range(10001):
                 if i % 500 == 0:
@@ -125,7 +126,7 @@ def do_all_mode():
                 if per_c == 1 or per_c == 0:
                     continue
 
-                for j in range(1600):
+                for j in range(L * L):
                     modi = game.choose_players()
                     if not modi:
                         continue

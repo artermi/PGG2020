@@ -116,7 +116,9 @@ def do_all_mode():
             f = open(filename,"w")
             print('Now doing:' + filename)
 
-            game = PL_FAPGG_5G(r,0.5,40,alp) #r,K,L alp
+            L = 100 
+
+            game = PL_FAPGG_5G(r,0.5,L,alp) #r,K,L alp
             per_c = 0.5
             for i in range(10001):
                 if i % 500 == 0:
@@ -127,7 +129,7 @@ def do_all_mode():
                 if per_c == 1 or per_c == 0:
                     continue
 
-                for j in range(1600):
+                for j in range(L * L):
                     modi = game.choose_players()
                     if not modi:
                         continue
