@@ -98,10 +98,10 @@ def do_all_mode():
             3.74,3.747,3.748,3.75,3.76,3.78,3.80,3.82,3.84,3.86,3.88,3.90,
             3.92,3.94,3.96,3.98,4.00,4.05,4.10,4.15,4.20,4.30,4.40,4.50,
             4.60,4.70,4.80,4.90,5.00,5.10,5.20,5.30,5.40,5.44,5.49,5.5]
-    alps = [0.45,0.4,0.3]
+    alps = [0.3]
     paths = []
     for alp in alps:
-        path = 'PL_' + str(int(alp * 100)).zfill(3)
+        path = 'PL200_' + str(int(alp * 100)).zfill(3)
         Path(path).mkdir(parents=True, exist_ok=True)
         paths.append((path,alp))
 
@@ -115,8 +115,8 @@ def do_all_mode():
 
             f = open(filename,"w")
             print('Now doing:' + filename)
-
-            L = 100 
+            start = time.time()
+            L = 200 
 
             game = PL_FAPGG_5G(r,0.5,L,alp) #r,K,L alp
             per_c = 0.5
@@ -136,6 +136,10 @@ def do_all_mode():
                 #If the strategy is not modified, no need to play the game
                     game.two_players_play(j + i * 1600)
             f.close()
+            end = time.time()
+            hours, rem = divmod(end-start,3600)
+            minutes, seconds = divmod(rem,60)
+            print('total_time: {:0>2}:{:0>2}:{:05.2f}'.format(int(hours),int(minutes), seconds))
 
 def do_alpha_mode():
     rs = [4,4.5,5]
@@ -155,6 +159,7 @@ def do_alpha_mode():
             filename = p + '/' + 'exp_' + str(int(alp * 10)).zfill(3) + '_' +  p + '.dat'
             f = open(filename,"w")
             print('Now doing:' + filename)
+            start = time.time()
 
             game = PL_FAPGG_5G(r,0.5,40,alp) #r,K,L alp
             for i in range(10001):
@@ -172,6 +177,8 @@ def do_alpha_mode():
                 #If the strategy is not modified, no need to play the game
                     game.two_players_play(j + i * 1600)
             f.close()
+            end = time.time()
+            print('total_time: {}'.format(end - start))
 
 
 
