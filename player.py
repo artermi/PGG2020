@@ -30,7 +30,7 @@ class Player:
         else:
             prob = 1.0/(1.0 + math.exp((self_prof - neigh_prof) /K))
 
-        if choices([True,False],[prob,1.0-prob])[0]:
+        if  np.random.random() < prob:
             self.isCoop = neighbour.isCoop
             return True
         return False
@@ -48,7 +48,7 @@ class APlayer(Player):
             return 0.0
                         
         if self.rnd != rnd:
-            self.strD = choices([True,False],[self.alp,1-self.alp])[0]
+            self.strD = np.random.random() < self.alp #choices([True,False],[self.alp,1-self.alp])[0]
             self.rnd = rnd
         if self.alp == 0 and self.strD:
             print('error')
@@ -58,7 +58,7 @@ class APlayer(Player):
 
         return 1.0
 
-    def change_strategy(self,nei,K,sprof,nprof,mos):
+    def change_strategy(self,nei,K,sprof,nprof,mos,):
         chan = super().change_strategy(nei,K,sprof,nprof) 
         self.nei = mos
         return chan
